@@ -4,16 +4,19 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 from pprint import pprint
 
-
-def find_element_xpath(driver, query: str):
-    return driver.find_element("xpath", query)
-
 options = Options()
 driver = webdriver.Chrome(service = Service(ChromeDriverManager().install()), options = options)
 ads = []
 driver.get("https://www.joberty.rs/IT-poslovi?page=1&pageSize=100&seniority=Internship,Junior&sort=created")
+
+
+def find_element_xpath(driver, query: str):
+    return driver.find_element("xpath", query)
+
+
 premiumAds = driver.find_elements("css selector", 'div.compact-job')
 commonAds = driver.find_elements("css selector", "div.mb-20")
+
 for premiumAd in premiumAds:
     adInfo = find_element_xpath(premiumAd, "div/div[2]/div")
     jobTitle = find_element_xpath(adInfo, "*/a")
@@ -32,6 +35,14 @@ for commonAd in commonAds:
                 jobProvider.get_attribute("innerHTML"),
                 jobLocation.get_attribute("innerHTML")])
 
+#h4[@class = "font-semibold opacity-75"]
+driver.get("https://www.helloworld.rs/prakse")
+helloWorldJobProviders = driver.find_elements("xpath", "//h4[@class = 'font-semibold opacity-75']/a")
+helloWorldJobTitles = driver.find_elements("xpath", "//a[@class = 'hover:opacity-50 font-bold text-lg']")
+zippedArrays = zip(helloWorldJobTitles,helloWorldJobProviders)
+ads.extend([[ad[0].get_attribute("innerHTML").split("\n")[0],ad[1].get_attribute("innerHTML")]
+            for ad in zippedArrays])
+driver.close()
 print(len(ads))
 print("[JOB TITLE, JOB PROVIDER, JOB LOCATION]")
 pprint(ads)
