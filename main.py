@@ -12,8 +12,6 @@ driver.get("https://www.joberty.rs/IT-poslovi?page=1&pageSize=100&seniority=Inte
 
 def find_element_xpath(driver, query: str):
     return driver.find_element("xpath", query)
-
-
 premiumAds = driver.find_elements("css selector", 'div.compact-job')
 commonAds = driver.find_elements("css selector", "div.mb-20")
 
@@ -39,8 +37,9 @@ for commonAd in commonAds:
 driver.get("https://www.helloworld.rs/prakse")
 helloWorldJobProviders = driver.find_elements("xpath", "//h4[@class = 'font-semibold opacity-75']/a")
 helloWorldJobTitles = driver.find_elements("xpath", "//a[@class = 'hover:opacity-50 font-bold text-lg']")
-zippedArrays = zip(helloWorldJobTitles,helloWorldJobProviders)
-ads.extend([[ad[0].get_attribute("innerHTML").split("\n")[0],ad[1].get_attribute("innerHTML")]
+helloWorldJobLocations = driver.find_elements("xpath","//div/div[1]/p[@class = 'text-sm font-semibold']")
+zippedArrays = zip(helloWorldJobTitles,helloWorldJobProviders,helloWorldJobLocations)
+ads.extend([[ad[0].get_attribute("innerHTML").split("\n")[0],ad[1].get_attribute("innerHTML"),ad[2].get_attribute("innerHTML")]
             for ad in zippedArrays])
 driver.close()
 print(len(ads))
